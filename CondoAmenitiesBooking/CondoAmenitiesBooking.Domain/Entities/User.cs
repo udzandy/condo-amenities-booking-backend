@@ -1,4 +1,6 @@
-﻿namespace CondoAmenitiesBooking.Domain.Entities
+﻿using CondoAmenitiesBooking.Domain.Enums;
+
+namespace CondoAmenitiesBooking.Domain.Entities
 {
     public class User
     {
@@ -12,6 +14,7 @@
         public string Block { get; set; } = default!;
         public string UnitNumber { get; set; } = default!;
         public string PostalCode { get; set; } = default!;
-        public string OccupancyType { get; set; } = default!; // Owner/Tenant
+        public OccupancyType OccupancyType { get; set; } = OccupancyType.Tenant;
+        public UserRole Role { get; set; } = UserRole.User;
     }
 }

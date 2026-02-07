@@ -1,4 +1,6 @@
-﻿namespace CondoAmenitiesBooking.Application.DTOs
+﻿using CondoAmenitiesBooking.Domain.Enums;
+
+namespace CondoAmenitiesBooking.Application.DTOs
 {
     public class RegisterUserDto
     {
@@ -12,6 +14,7 @@
         public string Block { get; set; } = default!;
         public string UnitNumber { get; set; } = default!;
         public string PostalCode { get; set; } = default!;
-        public string OccupancyType { get; set; } = default!;
+        public OccupancyType OccupancyType { get; set; } = OccupancyType.Tenant;
+        public UserRole Role { get; set; } = UserRole.User;
     }
 }
