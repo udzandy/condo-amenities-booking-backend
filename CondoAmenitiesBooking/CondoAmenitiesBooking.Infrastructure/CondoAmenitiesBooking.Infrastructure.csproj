@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20260207090806_create_user_table.cs" />
+    <Compile Remove="Migrations\20260207090806_create_user_table.Designer.cs" />
+    <Compile Remove="Migrations\20260207095014_add_role_column.cs" />
+    <Compile Remove="Migrations\20260207095014_add_role_column.Designer.cs" />
+    <Compile Remove="Migrations\AppDbContextModelSnapshot.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.3.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.36" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.36">
@@ -19,6 +27,10 @@
   <ItemGroup>
     <ProjectReference Include="..\CondoAmenitiesBooking.Application\CondoAmenitiesBooking.Application.csproj" />
     <ProjectReference Include="..\CondoAmenitiesBooking.Domain\CondoAmenitiesBooking.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

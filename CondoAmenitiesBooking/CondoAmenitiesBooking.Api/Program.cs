@@ -1,3 +1,5 @@
+using CondoAmenitiesBooking.Api.Extensions;
+using CondoAmenitiesBooking.Application.Features.Bookings.Handlers;
 using CondoAmenitiesBooking.Application.Interfaces;
 using CondoAmenitiesBooking.Infrastructure.Persistence;
 using CondoAmenitiesBooking.Infrastructure.Repositories;
@@ -15,6 +17,9 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(buil
 // DI
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<IPasswordHasherService, PasswordHasherService>();
+
+builder.Services.AddApplicationServices();
+builder.Services.AddScoped<CreateBookingHandler>();
 
 // JWT
 var key = Encoding.ASCII.GetBytes("ThisIsASecretKeyForJWT123456789012"); // Move to appsettings in prod

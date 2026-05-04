@@ -15,6 +15,6 @@ namespace CondoAmenitiesBooking.Application.DTOs
         public string UnitNumber { get; set; } = default!;
         public string PostalCode { get; set; } = default!;
         public OccupancyType OccupancyType { get; set; } = OccupancyType.Tenant;
-        public UserRole Role { get; set; } = UserRole.User;
+        //public UserRole Role { get; set; } = UserRole.User;
     }
 }
