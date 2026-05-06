@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CondoAmenitiesBooking.Application.DTOs
+﻿namespace CondoAmenitiesBooking.Application.DTOs
 {
     public class LoginDto
     {

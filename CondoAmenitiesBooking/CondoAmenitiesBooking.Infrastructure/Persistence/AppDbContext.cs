@@ -17,7 +17,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder);
 
             //modelBuilder.Entity<User>()
             //    .Property(u => u.Role)
@@ -30,6 +30,15 @@ namespace CondoAmenitiesBooking.Infrastructure.Persistence
             // Primary Key for User (string)
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UserId);
+
+            // Explicitly defines precision (18 total digits, 2 after decimal)
+            modelBuilder.Entity<Amenity>()
+                .Property(a => a.Price)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
 
             // Concurrency token
             modelBuilder.Entity<Booking>()

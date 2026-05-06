@@ -1,6 +1,6 @@
 ﻿namespace CondoAmenitiesBooking.Domain.Enums
 {
-    public enum OccupancyType
+    public enum OwnerType
     {
         Owner,
         Tenant
