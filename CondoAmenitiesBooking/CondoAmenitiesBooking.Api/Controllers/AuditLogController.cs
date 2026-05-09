@@ -1,5 +1,6 @@
 ﻿using CondoAmenitiesBooking.Application.DTOs;
 using CondoAmenitiesBooking.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CondoAmenitiesBooking.Api.Controllers
@@ -15,6 +16,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
             _service = service;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> Search([FromQuery] AuditLogFilterDto filter)
         {

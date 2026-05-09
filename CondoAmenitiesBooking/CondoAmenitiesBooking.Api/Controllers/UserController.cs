@@ -1,5 +1,6 @@
 ﻿using CondoAmenitiesBooking.Application.DTOs;
 using CondoAmenitiesBooking.Application.Interfaces;
+using CondoAmenitiesBooking.Infrastructure.Security;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CondoAmenitiesBooking.Api.Controllers
@@ -8,42 +9,80 @@ namespace CondoAmenitiesBooking.Api.Controllers
     [Route("api/users")]
     public class UserController : ControllerBase
     {
-        private readonly IUserService _service;
+        //private readonly IUserService _service;
 
-        public UserController(IUserService service)
-        {
-            _service = service;
-        }
+        private readonly JwtService _jwtService;
+        private readonly IUserService _userService;
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterUserDto dto)
+        //public UserController(IUserService service)
+        //{
+        //    _service = service;
+        //}
+
+        public UserController(IUserService userService, JwtService jwtService)
         {
-            var userId = await _service.Register(dto);
-            return Ok(new { UserId = userId });
+            _userService = userService;
+            _jwtService = jwtService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDto dto)
         {
-            var (userId, name) = await _service.Login(dto);
+            var user = await _userService.ValidateUser(dto);
 
-            if (userId == null)
-                return Unauthorized("Invalid credentials");
+            //if (user == null)
+            //    return Unauthorized();
 
-            return Ok(new { UserId = userId, Name = name });
+            if (user == null)
+            {
+                return Unauthorized(new
+                {
+                    message = "Invalid email or password"
+                });
+            }
+
+            var token = _jwtService.GenerateToken(user.UserId, user.Role.ToString());
+
+            //return Ok(new { token });
+
+            return Ok(new
+            {
+                token,
+                userId = user.UserId,
+                name = $"{user.FirstName} {user.LastName}",
+                role = user.Role.ToString()
+            });
         }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterUserDto dto)
+        {
+            var userId = await _userService.Register(dto);
+            return Ok(new { UserId = userId });
+        }
+
+        //[HttpPost("login")]
+        //public async Task<IActionResult> Login(LoginDto dto)
+        //{
+        //    var (userId, name) = await _service.Login(dto);
+
+        //    if (userId == null)
+        //        return Unauthorized("Invalid credentials");
+
+        //    return Ok(new { UserId = userId, Name = name });
+        //}
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var users = await _service.GetAllActiveUsers();
+            var users = await _userService.GetAllActiveUsers();
             return Ok(users);
         }
 
         [HttpDelete("{userId}")]
         public async Task<IActionResult> Delete(string userId)
         {
-            var success = await _service.DeleteUser(userId);
+            var success = await _userService.DeleteUser(userId);
 
             if (!success)
                 return NotFound();

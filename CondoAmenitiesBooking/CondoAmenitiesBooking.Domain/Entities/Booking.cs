@@ -7,6 +7,7 @@ namespace CondoAmenitiesBooking.Domain.Entities
         public int BookingId { get; set; }
         public string UserId { get; set; } = default!;
         public int AmenityId { get; set; }
+        //public string UnitName { get; set; } = default!;
         public DateTime StartTime { get; set; }
         public DateTime EndTime { get; set; }
         public BookingStatus Status { get; set; } = BookingStatus.Confirmed;

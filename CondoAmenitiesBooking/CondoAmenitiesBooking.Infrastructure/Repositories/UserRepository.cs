@@ -34,11 +34,15 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
         public async Task<string> Register(RegisterUserDto dto)
         {
-            var userId = $"{dto.Block}-{dto.Floor:D2}-{dto.Unit:D2}";
+            var userId = $"{dto.Block}-{dto.Floor:D2}-{dto.UnitNumber:D2}";
 
             var exists = await _context.Users.AnyAsync(u => u.UserId == userId);
             if (exists)
                 throw new Exception("User already exists");
+
+            //var random = new Random();
+            //var randomNumber = random.Next(1000, 9999);
+            //var userId = $"{dto.Block}-{dto.Floor:D2}-{dto.Unit:D2}-{randomNumber}";
 
             var user = new User
             {
@@ -47,13 +51,14 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                 LastName = dto.LastName,
                 Email = dto.Email,
                 Mobile = dto.Mobile,
-                PasswordHash = PasswordHasher.Hash(dto.Password),
-                Estate = dto.Estate,
+                //PasswordHash = PasswordHasher.Hash(dto.Password),
+                PasswordHash = PasswordHelper.HashPassword(dto.Password),
+                Estate = dto.EstateName,
                 Block = dto.Block,
                 Floor = dto.Floor,
-                Unit = dto.Unit,
+                Unit = dto.UnitNumber,
                 PostalCode = dto.PostalCode,
-                OwnerType = dto.OwnerType
+                OwnerType = dto.UserType
             };
 
             _context.Users.Add(user);
@@ -93,7 +98,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
         public async Task<bool> DeleteUser(string userId)
         {
-            var user = await _context.Users.FindAsync(userId);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
             if (user == null) return false;
 
             user.IsActive = false; // soft delete
@@ -104,8 +109,22 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
         public async Task<User?> GetById(string userId)
         {
-            return await _context.Users
-                .FirstOrDefaultAsync(u => u.UserId == userId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+        }
+
+        public async Task<User?> ValidateUser(LoginDto dto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email);
+
+            if (user == null)
+                return null;
+
+            var isValid = PasswordHelper.VerifyPassword(user.PasswordHash, dto.Password);
+
+            if (!isValid)
+                return null;
+
+            return user;
         }
     }
 }

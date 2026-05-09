@@ -33,17 +33,32 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
         public async Task<List<BookingDto>> GetUserBookings(string userId)
         {
+            //return await _context.Bookings
+            //    .Include(b => b.Amenity)
+            //    .Where(b => b.UserId == userId)
+            //    .OrderByDescending(b => b.StartTime)
+            //    .Select(b => new BookingDto
+            //    {
+            //        BookingId = b.BookingId,
+            //        AmenityName = b.Amenity.Name,
+            //        Date = b.StartTime.Date,
+            //        TimeRange = $"{b.StartTime:hh:mm tt} - {b.EndTime:hh:mm tt}",
+            //        Status = b.Status.ToString()
+            //    })
+            //    .ToListAsync();
+
             return await _context.Bookings
-                .Include(b => b.Amenity)
-                .Where(b => b.UserId == userId)
+                .Include(x => x.Amenity)
+                .Where(x => x.UserId == userId)
                 .OrderByDescending(b => b.StartTime)
-                .Select(b => new BookingDto
+                .Select(x => new BookingDto
                 {
-                    BookingId = b.BookingId,
-                    AmenityName = b.Amenity.Name,
-                    Date = b.StartTime.Date,
-                    TimeRange = $"{b.StartTime:hh:mm tt} - {b.EndTime:hh:mm tt}",
-                    Status = b.Status.ToString()
+                    BookingId = x.BookingId,
+                    Amenity = x.Amenity.Name,
+                    //Unit = x.UnitName,
+                    Date = x.StartTime.ToString("yyyy-MM-dd"),
+                    Time = $"{x.StartTime:hh:mm tt} - {x.EndTime:hh:mm tt}",
+                    Status = x.Status.ToString()
                 })
                 .ToListAsync();
         }
