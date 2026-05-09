@@ -4,7 +4,8 @@
     {
         public string UserId { get; set; } = default!;
         public int AmenityId { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public int UnitId { get; set; }
+        public int SlotId { get; set; }
+        public DateTime BookingDate { get; set; }
     }
 }

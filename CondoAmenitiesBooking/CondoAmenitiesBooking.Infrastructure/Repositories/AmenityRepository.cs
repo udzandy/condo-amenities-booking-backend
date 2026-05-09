@@ -16,8 +16,17 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
         public async Task<Amenity?> GetById(int amenityId)
         {
-            return await _context.Amenities
-                .FirstOrDefaultAsync(a => a.AmenityId == amenityId);
+            return await _context.Amenities.FirstOrDefaultAsync(a => a.AmenityId == amenityId);
+        }
+
+        public async Task<AmenityUnit?> GetUnitById(int unitId)
+        {
+            return await _context.AmenityUnits.FirstOrDefaultAsync(x => x.UnitId == unitId);
+        }
+
+        public async Task<AmenityTimeSlot?> GetSlotById(int slotId)
+        {
+            return await _context.AmenityTimeSlots.FirstOrDefaultAsync(x => x.SlotId == slotId);
         }
     }
 }

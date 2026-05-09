@@ -10,8 +10,10 @@ namespace CondoAmenitiesBooking.Infrastructure.Persistence
 
         public DbSet<User> Users => Set<User>();
         public DbSet<Amenity> Amenities => Set<Amenity>();
+        public DbSet<AmenityUnit> AmenityUnits => Set<AmenityUnit>();
+        public DbSet<AmenityTimeSlot> AmenityTimeSlots => Set<AmenityTimeSlot>();
+        public DbSet<AmenityPolicy> AmenityPolicies => Set<AmenityPolicy>();
         public DbSet<Booking> Bookings => Set<Booking>();
-        public DbSet<AmenityRule> AmenityRules => Set<AmenityRule>();
         public DbSet<Payment> Payments => Set<Payment>();
         public DbSet<AuditLog> AuditLogs => Set<AuditLog>();
 
@@ -27,42 +29,93 @@ namespace CondoAmenitiesBooking.Infrastructure.Persistence
             //    .Property(u => u.OccupancyType)
             //    .HasConversion<string>();
 
-            // Primary Key for User (string)
+            // USER
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UserId);
 
-            // Explicitly defines precision (18 total digits, 2 after decimal)
+            // AMENITY
             modelBuilder.Entity<Amenity>()
-                .Property(a => a.Price)
-                .HasPrecision(18, 2);
+                .HasKey(x => x.AmenityId);
+
+            // UNIT
+            modelBuilder.Entity<AmenityUnit>()
+                .HasKey(x => x.UnitId);
+
+            modelBuilder.Entity<AmenityUnit>()
+                .HasOne(x => x.Amenity)
+                .WithMany(x => x.Units)
+                .HasForeignKey(x => x.AmenityId);
 
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
 
+            // SLOT
+            modelBuilder.Entity<AmenityTimeSlot>()
+                .HasKey(x => x.SlotId);
+
+            modelBuilder.Entity<AmenityTimeSlot>()
+                .HasOne(x => x.Unit)
+                .WithMany(x => x.TimeSlots)
+                .HasForeignKey(x => x.UnitId);
+
+            modelBuilder.Entity<AmenityPolicy>()
+                .HasKey(x => x.PolicyId);
+
+            modelBuilder.Entity<AmenityPolicy>()
+                .HasOne(x => x.Amenity)
+                .WithOne(x => x.Policy)
+                .HasForeignKey<AmenityPolicy>(x => x.AmenityId);
+
+            // BOOKING
             // Concurrency token
             modelBuilder.Entity<Booking>()
                 .Property(b => b.RowVersion)
                 .IsRowVersion();
 
-            // Relationships
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.User)
-                .WithMany(u => u.Bookings)
-                .HasForeignKey(b => b.UserId);
+        .HasKey(x => x.BookingId);
 
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Amenity)
-                .WithMany(a => a.Bookings)
-                .HasForeignKey(b => b.AmenityId);
+                .HasOne(x => x.User)
+                .WithMany(x => x.Bookings)
+                .HasForeignKey(x => x.UserId);
 
-            modelBuilder.Entity<AmenityRule>()
-                .HasKey(a => a.RuleId);
+            modelBuilder.Entity<Booking>()
+                .HasOne(x => x.Amenity)
+                .WithMany()
+                .HasForeignKey(x => x.AmenityId);
 
-            modelBuilder.Entity<Payment>()
-                .HasOne(p => p.Booking)
-                .WithOne(b => b.Payment)
-                .HasForeignKey<Payment>(p => p.BookingId);
+            modelBuilder.Entity<Booking>()
+                .HasOne(x => x.Unit)
+                .WithMany(x => x.Bookings)
+                .HasForeignKey(x => x.UnitId);
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(x => x.Slot)
+                .WithMany(x => x.Bookings)
+                .HasForeignKey(x => x.SlotId);
+
+            // IMPORTANT UNIQUE RULE
+            modelBuilder.Entity<Booking>()
+                .HasIndex(x => new
+                {
+                    x.BookingDate,
+                    x.UnitId,
+                    x.SlotId
+                })
+                .IsUnique();
+
+
+            //modelBuilder.Entity<Booking>()
+            //    .HasOne(b => b.Amenity)
+            //    .WithMany(a => a.Bookings)
+            //    .HasForeignKey(b => b.AmenityId);
+
+            //modelBuilder.Entity<Payment>()
+            //    .HasOne(p => p.Booking)
+            //    .WithOne(b => b.Payment)
+            //    .HasForeignKey<Payment>(p => p.BookingId);
 
             modelBuilder.Entity<AuditLog>()
                 .HasKey(a => a.LogId);
@@ -72,7 +125,5 @@ namespace CondoAmenitiesBooking.Infrastructure.Persistence
                 .WithMany(u => u.AuditLogs)
                 .HasForeignKey(a => a.UserId);
         }
-
-        //public DbSet<User> Users => Set<User>();
     }
 }

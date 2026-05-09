@@ -5,9 +5,9 @@ namespace CondoAmenitiesBooking.Application.Interfaces
 {
     public interface IBookingService
     {
-        Task<bool> HasConflict(int amenityId, DateTime start, DateTime end);
+        Task<bool> HasConflict(int unitId, int slotId, DateTime bookingDate);
         Task<Booking> CreateBooking(Booking booking);
         Task<List<BookingDto>> GetUserBookings(string userId);
-        Task<Booking?> CancelBooking(int bookingId, string userId);
+        Task<(Booking?, bool)> CancelBooking(int bookingId, string userId);
     }
 }

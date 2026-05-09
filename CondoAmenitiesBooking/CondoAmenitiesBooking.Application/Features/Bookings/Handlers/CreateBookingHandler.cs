@@ -30,46 +30,67 @@ namespace CondoAmenitiesBooking.Application.Features.Bookings.Handlers
 
         public async Task<Result> Handle(CreateBookingCommand cmd)
         {
+            // VALIDATE USER
             var user = await _userService.GetById(cmd.UserId);
             if (user == null)
                 return Result.Failure("User not found");
 
-            if (cmd.StartTime >= cmd.EndTime)
-                return Result.Failure("Invalid time range");
-
-            var hasConflict = await _bookingService.HasConflict(
-                cmd.AmenityId,
-                cmd.StartTime,
-                cmd.EndTime);
-
-            if (hasConflict)
-                return Result.Failure("Time slot already booked");
-
+            // VALIDATE AMENITY
             var amenity = await _amenityService.GetById(cmd.AmenityId);
             if (amenity == null)
                 return Result.Failure("Amenity not found");
 
+            // GET UNIT
+            var unit = await _amenityService.GetUnitById(cmd.UnitId);
+            if (unit == null)
+                return Result.Failure("Amenity unit not found");
+
+            // GET SLOT
+            var slot = await _amenityService.GetSlotById(cmd.SlotId);
+            if (slot == null)
+                return Result.Failure("Time slot not found");
+
+            //if (cmd.StartTime >= cmd.EndTime)
+            //    return Result.Failure("Invalid time range");
+
+            // CONFLICT CHECK
+            var hasConflict = await _bookingService.HasConflict(cmd.UnitId, cmd.SlotId, cmd.BookingDate);
+            if (hasConflict)
+                return Result.Failure("Selected slot already booked");
+
+            // CREATE BOOKING
             var booking = new Booking
             {
                 UserId = cmd.UserId,
                 AmenityId = cmd.AmenityId,
-                StartTime = cmd.StartTime,
-                EndTime = cmd.EndTime,
+                UnitId = cmd.UnitId,
+                SlotId = cmd.SlotId,
+                BookingDate = cmd.BookingDate.Date,
                 Status = BookingStatus.Confirmed
             };
 
             var saved = await _bookingService.CreateBooking(booking);
 
-            // Format user info
-            var userInfo = $"{user.FirstName} {user.LastName} " +
-               $"(Block {user.Block}, Floor {user.Floor:D2}, Unit {user.Unit:D2})";
+            // FORMAT USER INFO
+            var userInfo =
+                $"{user.FirstName} {user.LastName} " +
+                $"(Block {user.Block}, " +
+                $"Floor {user.Floor:D2}, " +
+                $"Unit {user.Unit:D2})";
 
-            // Audit message
-            var details = $"{userInfo} CREATED booking (BookingId={saved.BookingId}) " +
-                          $"for {amenity.Name} " +
-                          $"on {cmd.StartTime:yyyy-MM-dd} " +
-                          $"from {cmd.StartTime:hh:mm tt} to {cmd.EndTime:hh:mm tt} " +
-                          $"at {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss}";
+            // FORMAT SLOT TIME
+            var slotTime =
+                $"{DateTime.Today.Add(slot.StartTime):hh:mm tt} - " +
+                $"{DateTime.Today.Add(slot.EndTime):hh:mm tt}";
+
+            // AUDIT DETAILS
+            var details =
+                $"{userInfo} CREATED booking " +
+                $"(BookingId={saved.BookingId}) " +
+                $"for {amenity.Name} - {unit.UnitName} " +
+                $"on {cmd.BookingDate:yyyy-MM-dd} " +
+                $"during {slotTime} " +
+                $"at {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC";
 
             // AUDIT LOG
             await _auditService.LogAsync(
@@ -79,9 +100,15 @@ namespace CondoAmenitiesBooking.Application.Features.Bookings.Handlers
                 details
             );
 
+            // EMAIL
+            var emailMessage = $"Your booking #{saved.BookingId} for " +
+                $"{amenity.Name} ({unit.UnitName}) on " +
+                $"{cmd.BookingDate:yyyy-MM-dd} during {slotTime} " +
+                $"has been confirmed.";
+
             await _emailService.SendAsync(
                 "Booking Confirmed",
-                $"Booking #{saved.BookingId} confirmed");
+                emailMessage);
 
             return Result.Success(saved.BookingId);
         }
