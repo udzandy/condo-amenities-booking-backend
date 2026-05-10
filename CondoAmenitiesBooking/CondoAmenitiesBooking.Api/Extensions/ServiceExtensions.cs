@@ -18,6 +18,7 @@ namespace CondoAmenitiesBooking.Api.Extensions
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+            services.AddScoped<IAmenityAdminService,AmenityAdminService>();
             services.AddScoped<GetUserBookingsHandler>();
             services.AddScoped<CancelBookingHandler>();
             services.AddScoped<GetAmenitiesHandler>();

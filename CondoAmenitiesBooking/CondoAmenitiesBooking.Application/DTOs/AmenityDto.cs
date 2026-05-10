@@ -8,5 +8,6 @@
         public decimal Price { get; set; }
         public string ImagePath { get; set; } = default!;
         public string RoutePath { get; set; } = default!;
+        public bool IsActive { get; set; }
     }
 }
