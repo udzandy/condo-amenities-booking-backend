@@ -6,6 +6,9 @@
         public string Name { get; set; } = default!;
         public string Description { get; set; } = default!;
         public bool IsActive { get; set; } = true;
+        public decimal Price { get; set; }
+        public string ImagePath { get; set; } = default!;
+        public string RoutePath { get; set; } = default!;
         public AmenityPolicy Policy { get; set; } = default!;
         //public int Capacity { get; set; }
         //public bool IsPaid { get; set; }

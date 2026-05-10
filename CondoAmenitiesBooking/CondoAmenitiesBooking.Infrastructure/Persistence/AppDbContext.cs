@@ -74,27 +74,35 @@ namespace CondoAmenitiesBooking.Infrastructure.Persistence
                 .IsRowVersion();
 
             modelBuilder.Entity<Booking>()
-        .HasKey(x => x.BookingId);
+                .HasKey(x => x.BookingId);
 
+            // Relationship with User (Keep Cascade if you want Bookings gone when User is deleted)
             modelBuilder.Entity<Booking>()
                 .HasOne(x => x.User)
                 .WithMany(x => x.Bookings)
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // Relationship with Amenity (Changed to Restrict)
             modelBuilder.Entity<Booking>()
                 .HasOne(x => x.Amenity)
                 .WithMany()
-                .HasForeignKey(x => x.AmenityId);
+                .HasForeignKey(x => x.AmenityId)
+                .OnDelete(DeleteBehavior.Restrict);
 
+            // Relationship with Unit (Keep Cascade)
             modelBuilder.Entity<Booking>()
                 .HasOne(x => x.Unit)
                 .WithMany(x => x.Bookings)
-                .HasForeignKey(x => x.UnitId);
+                .HasForeignKey(x => x.UnitId)
+                .OnDelete(DeleteBehavior.Cascade);
 
+            // Relationship with Slot (Changed to Restrict)
             modelBuilder.Entity<Booking>()
                 .HasOne(x => x.Slot)
                 .WithMany(x => x.Bookings)
-                .HasForeignKey(x => x.SlotId);
+                .HasForeignKey(x => x.SlotId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // IMPORTANT UNIQUE RULE
             modelBuilder.Entity<Booking>()
