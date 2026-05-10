@@ -1,4 +1,5 @@
-﻿using CondoAmenitiesBooking.Application.Features.Amenities.Handlers;
+﻿using CondoAmenitiesBooking.Application.Features.AdminDashboard.Handlers;
+using CondoAmenitiesBooking.Application.Features.Amenities.Handlers;
 using CondoAmenitiesBooking.Application.Features.Bookings.Handlers;
 using CondoAmenitiesBooking.Application.Interfaces;
 using CondoAmenitiesBooking.Infrastructure.Repositories;
@@ -15,11 +16,16 @@ namespace CondoAmenitiesBooking.Api.Extensions
             services.AddScoped<IAmenityService, AmenityRepository>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAuditService, AuditService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             services.AddScoped<GetUserBookingsHandler>();
             services.AddScoped<CancelBookingHandler>();
             services.AddScoped<GetAmenitiesHandler>();
             services.AddScoped<GetAmenityAvailabilityHandler>();
             services.AddScoped<GetAmenitiesBookingConfigHandler>();
+            services.AddScoped<GetDashboardSummaryHandler>();
+            services.AddScoped<GetRecentBookingsHandler>();
+            services.AddScoped<GetAuditLogsHandler>();
 
             return services;
         }

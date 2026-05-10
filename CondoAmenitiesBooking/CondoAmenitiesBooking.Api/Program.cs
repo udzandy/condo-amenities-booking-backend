@@ -1,6 +1,7 @@
 using CondoAmenitiesBooking.Api.Extensions;
 using CondoAmenitiesBooking.Application.Features.Bookings.Handlers;
 using CondoAmenitiesBooking.Application.Interfaces;
+using CondoAmenitiesBooking.Infrastructure.Email;
 using CondoAmenitiesBooking.Infrastructure.Persistence;
 using CondoAmenitiesBooking.Infrastructure.Repositories;
 using CondoAmenitiesBooking.Infrastructure.Security;
@@ -53,8 +54,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
 
-            IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
 
@@ -80,6 +80,8 @@ builder.Services.AddCors(options =>
                   .AllowAnyMethod();
         });
 });
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

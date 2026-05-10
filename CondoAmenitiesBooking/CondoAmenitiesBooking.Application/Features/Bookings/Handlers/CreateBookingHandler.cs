@@ -101,14 +101,46 @@ namespace CondoAmenitiesBooking.Application.Features.Bookings.Handlers
             );
 
             // EMAIL
-            var emailMessage = $"Your booking #{saved.BookingId} for " +
-                $"{amenity.Name} ({unit.UnitName}) on " +
-                $"{cmd.BookingDate:yyyy-MM-dd} during {slotTime} " +
-                $"has been confirmed.";
+            //var emailMessage = $"Your booking #{saved.BookingId} for " +
+            //    $"{amenity.Name} ({unit.UnitName}) on " +
+            //    $"{cmd.BookingDate:yyyy-MM-dd} during {slotTime} " +
+            //    $"has been confirmed.";
+
+            //await _emailService.SendAsync(
+            //    "Booking Confirmed",
+            //    emailMessage);
 
             await _emailService.SendAsync(
-                "Booking Confirmed",
-                emailMessage);
+                    user.Email,
+                    "Booking Confirmed",
+                    $@"
+                        <h2>Booking Confirmed</h2>
+
+                        <p>Hello {user.FirstName},</p>
+
+                        <p>Your booking has been confirmed.</p>
+
+                        <table border='1' cellpadding='8'>
+                            <tr>
+                                <td><b>Booking ID</b></td>
+                                <td>{saved.BookingId}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Amenity</b></td>
+                                <td>{amenity.Name}</td>
+                            </tr>
+
+                            <tr>
+                                <td><b>Date</b></td>
+                                <td>{cmd.BookingDate:dd MMM yyyy}</td>
+                            </tr>
+                        </table>
+
+                        <br/>
+
+                        <p>Thank you.</p>
+                    ");
 
             return Result.Success(saved.BookingId);
         }
