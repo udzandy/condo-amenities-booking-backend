@@ -1,18 +1,21 @@
-﻿using CondoAmenitiesBooking.Domain.Entities;
+﻿using CondoAmenitiesBooking.Application.DTOs;
+using CondoAmenitiesBooking.Domain.Entities;
 
 namespace CondoAmenitiesBooking.Application.Interfaces
 {
     public interface IAmenityAdminService
     {
-        Task<List<Amenity>> GetAmenities();
-        Task<Amenity> CreateAmenity(Amenity amenity);
-        Task UpdateAmenity(Amenity amenity);
+        Task<List<AmenityDto>> GetAmenities();
+        Task<AmenityDto> CreateAmenity(AmenityDto amenity);
+        Task<AmenityDto?> UpdateAmenity(int id, AmenityDto amenity);
         Task DeleteAmenity(int amenityId);
-        Task<AmenityUnit> CreateUnit(AmenityUnit unit);
-        Task UpdateUnit(AmenityUnit unit);
+        Task<List<AmenityUnitDto>> GetUnits();
+        Task<AmenityUnitDto> CreateUnit(AmenityUnitDto unit);
+        Task<AmenityUnitDto?> UpdateUnit(int id, AmenityUnitDto unit);
         Task DeleteUnit(int unitId);
-        Task<AmenityTimeSlot> CreateSlot(AmenityTimeSlot slot);
-        Task UpdateSlot(AmenityTimeSlot slot);
+        Task<List<AmenitySlotDto>> GetSlots();
+        Task<AmenitySlotDto> CreateSlot(AmenitySlotDto slot);
+        Task<AmenitySlotDto?> UpdateSlot(int id, AmenitySlotDto slot);
         Task DeleteSlot(int slotId);
     }
 }

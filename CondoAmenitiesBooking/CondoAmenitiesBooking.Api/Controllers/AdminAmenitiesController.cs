@@ -1,4 +1,5 @@
-﻿using CondoAmenitiesBooking.Application.Interfaces;
+﻿using CondoAmenitiesBooking.Application.DTOs;
+using CondoAmenitiesBooking.Application.Interfaces;
 using CondoAmenitiesBooking.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,17 +11,16 @@ namespace CondoAmenitiesBooking.Api.Controllers
     {
         private readonly IAmenityAdminService _service;
 
-        public AdminAmenitiesController(
-            IAmenityAdminService service)
+        public AdminAmenitiesController(IAmenityAdminService service)
         {
             _service = service;
         }
 
         // =========================
-        // GET ALL
+        // GET AMENITIES
         // =========================
 
-        [HttpGet]
+        [HttpGet("getAmenities")]
         public async Task<IActionResult> GetAmenities()
         {
             var result = await _service.GetAmenities();
@@ -32,12 +32,10 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // CREATE AMENITY
         // =========================
 
-        [HttpPost]
-        public async Task<IActionResult> CreateAmenity(
-            [FromBody] Amenity amenity)
+        [HttpPost("createAmenity")]
+        public async Task<IActionResult> CreateAmenity([FromBody] AmenityDto amenity)
         {
-            var result =
-                await _service.CreateAmenity(amenity);
+            var result = await _service.CreateAmenity(amenity);
 
             return Ok(result);
         }
@@ -46,14 +44,10 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // UPDATE AMENITY
         // =========================
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAmenity(
-            int id,
-            [FromBody] Amenity amenity)
+        [HttpPut("updateAmenity/{id}")]
+        public async Task<IActionResult> UpdateAmenity(int id, [FromBody] AmenityDto amenity)
         {
-            amenity.AmenityId = id;
-
-            await _service.UpdateAmenity(amenity);
+            await _service.UpdateAmenity(id, amenity);
 
             return Ok();
         }
@@ -62,7 +56,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // DELETE AMENITY
         // =========================
 
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteAmenity/{id}")]
         public async Task<IActionResult> DeleteAmenity(int id)
         {
             await _service.DeleteAmenity(id);
@@ -71,15 +65,25 @@ namespace CondoAmenitiesBooking.Api.Controllers
         }
 
         // =========================
+        // GET UNITS
+        // =========================
+
+        [HttpGet("getUnits")]
+        public async Task<IActionResult> GetUnits()
+        {
+            var result = await _service.GetUnits();
+
+            return Ok(result);
+        }
+
+        // =========================
         // CREATE UNIT
         // =========================
 
-        [HttpPost("units")]
-        public async Task<IActionResult> CreateUnit(
-            [FromBody] AmenityUnit unit)
+        [HttpPost("createUnit")]
+        public async Task<IActionResult> CreateUnit([FromBody] AmenityUnitDto unit)
         {
-            var result =
-                await _service.CreateUnit(unit);
+            var result = await _service.CreateUnit(unit);
 
             return Ok(result);
         }
@@ -88,14 +92,10 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // UPDATE UNIT
         // =========================
 
-        [HttpPut("units/{id}")]
-        public async Task<IActionResult> UpdateUnit(
-            int id,
-            [FromBody] AmenityUnit unit)
+        [HttpPut("updateUnit/{id}")]
+        public async Task<IActionResult> UpdateUnit(int id, [FromBody] AmenityUnitDto unit)
         {
-            unit.UnitId = id;
-
-            await _service.UpdateUnit(unit);
+            await _service.UpdateUnit(id, unit);
 
             return Ok();
         }
@@ -104,7 +104,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // DELETE UNIT
         // =========================
 
-        [HttpDelete("units/{id}")]
+        [HttpDelete("deleteUnit/{id}")]
         public async Task<IActionResult> DeleteUnit(int id)
         {
             await _service.DeleteUnit(id);
@@ -113,15 +113,25 @@ namespace CondoAmenitiesBooking.Api.Controllers
         }
 
         // =========================
+        // GET SLOTS
+        // =========================
+
+        [HttpGet("getSlots")]
+        public async Task<IActionResult> GetSlots()
+        {
+            var result = await _service.GetSlots();
+
+            return Ok(result);
+        }
+
+        // =========================
         // CREATE SLOT
         // =========================
 
-        [HttpPost("slots")]
-        public async Task<IActionResult> CreateSlot(
-            [FromBody] AmenityTimeSlot slot)
+        [HttpPost("createSlot")]
+        public async Task<IActionResult> CreateSlot([FromBody] AmenitySlotDto slot)
         {
-            var result =
-                await _service.CreateSlot(slot);
+            var result = await _service.CreateSlot(slot);
 
             return Ok(result);
         }
@@ -130,14 +140,10 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // UPDATE SLOT
         // =========================
 
-        [HttpPut("slots/{id}")]
-        public async Task<IActionResult> UpdateSlot(
-            int id,
-            [FromBody] AmenityTimeSlot slot)
+        [HttpPut("updateSlot/{id}")]
+        public async Task<IActionResult> UpdateSlot(int id, [FromBody] AmenitySlotDto slot)
         {
-            slot.SlotId = id;
-
-            await _service.UpdateSlot(slot);
+            await _service.UpdateSlot(id, slot);
 
             return Ok();
         }
@@ -146,7 +152,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // DELETE SLOT
         // =========================
 
-        [HttpDelete("slots/{id}")]
+        [HttpDelete("deleteSlot/{id}")]
         public async Task<IActionResult> DeleteSlot(int id)
         {
             await _service.DeleteSlot(id);
