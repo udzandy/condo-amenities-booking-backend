@@ -81,7 +81,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // =========================
 
         [HttpPost("createUnit")]
-        public async Task<IActionResult> CreateUnit([FromBody] AmenityUnitDto unit)
+        public async Task<IActionResult> CreateUnit([FromBody] AddAmenityUnitDto unit)
         {
             var result = await _service.CreateUnit(unit);
 
@@ -93,7 +93,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // =========================
 
         [HttpPut("updateUnit/{id}")]
-        public async Task<IActionResult> UpdateUnit(int id, [FromBody] AmenityUnitDto unit)
+        public async Task<IActionResult> UpdateUnit(int id, [FromBody] UpdateAmenityUnitDto unit)
         {
             await _service.UpdateUnit(id, unit);
 
@@ -129,7 +129,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // =========================
 
         [HttpPost("createSlot")]
-        public async Task<IActionResult> CreateSlot([FromBody] AmenitySlotDto slot)
+        public async Task<IActionResult> CreateSlot([FromBody] AddAmenitySlotDto slot)
         {
             var result = await _service.CreateSlot(slot);
 
@@ -141,7 +141,7 @@ namespace CondoAmenitiesBooking.Api.Controllers
         // =========================
 
         [HttpPut("updateSlot/{id}")]
-        public async Task<IActionResult> UpdateSlot(int id, [FromBody] AmenitySlotDto slot)
+        public async Task<IActionResult> UpdateSlot(int id, [FromBody] UpdateAmenitySlotDto slot)
         {
             await _service.UpdateSlot(id, slot);
 

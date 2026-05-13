@@ -106,7 +106,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Services
                 .ToListAsync();
         }
 
-        public async Task<AmenityUnitDto> CreateUnit(AmenityUnitDto unit)
+        public async Task<AddAmenityUnitDto> CreateUnit(AddAmenityUnitDto unit)
         {
             AmenityUnit entity = new AmenityUnit
             {
@@ -122,7 +122,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Services
             return unit;
         }
 
-        public async Task<AmenityUnitDto?> UpdateUnit(int id, AmenityUnitDto unit)
+        public async Task<UpdateAmenityUnitDto?> UpdateUnit(int id, UpdateAmenityUnitDto unit)
         {
             var entity = await _context.AmenityUnits
             .FirstOrDefaultAsync(x => x.UnitId == id);
@@ -174,7 +174,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Services
                 .ToListAsync();
         }
 
-        public async Task<AmenitySlotDto> CreateSlot(AmenitySlotDto slot)
+        public async Task<AddAmenitySlotDto> CreateSlot(AddAmenitySlotDto slot)
         {
             AmenityTimeSlot entity = new AmenityTimeSlot
             {
@@ -191,7 +191,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Services
             return slot;
         }
 
-        public async Task<AmenitySlotDto?> UpdateSlot(int id, AmenitySlotDto slot)
+        public async Task<UpdateAmenitySlotDto?> UpdateSlot(int id, UpdateAmenitySlotDto slot)
         {
             var entity = await _context.AmenityTimeSlots.FirstOrDefaultAsync(x => x.SlotId == id);
 

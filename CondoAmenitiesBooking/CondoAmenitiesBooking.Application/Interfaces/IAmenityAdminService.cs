@@ -10,12 +10,12 @@ namespace CondoAmenitiesBooking.Application.Interfaces
         Task<AmenityDto?> UpdateAmenity(int id, AmenityDto amenity);
         Task DeleteAmenity(int amenityId);
         Task<List<AmenityUnitDto>> GetUnits();
-        Task<AmenityUnitDto> CreateUnit(AmenityUnitDto unit);
-        Task<AmenityUnitDto?> UpdateUnit(int id, AmenityUnitDto unit);
+        Task<AddAmenityUnitDto> CreateUnit(AddAmenityUnitDto unit);
+        Task<UpdateAmenityUnitDto?> UpdateUnit(int id, UpdateAmenityUnitDto unit);
         Task DeleteUnit(int unitId);
         Task<List<AmenitySlotDto>> GetSlots();
-        Task<AmenitySlotDto> CreateSlot(AmenitySlotDto slot);
-        Task<AmenitySlotDto?> UpdateSlot(int id, AmenitySlotDto slot);
+        Task<AddAmenitySlotDto> CreateSlot(AddAmenitySlotDto slot);
+        Task<UpdateAmenitySlotDto?> UpdateSlot(int id, UpdateAmenitySlotDto slot);
         Task DeleteSlot(int slotId);
     }
 }
