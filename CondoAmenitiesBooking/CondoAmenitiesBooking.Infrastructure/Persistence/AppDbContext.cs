@@ -33,6 +33,13 @@ namespace CondoAmenitiesBooking.Infrastructure.Persistence
             modelBuilder.Entity<User>()
                 .HasKey(u => u.UserId);
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.Property(x => x.IsApproved)
+                      .HasDefaultValue(false)
+                      .IsRequired();
+            });
+
             // AMENITY
             modelBuilder.Entity<Amenity>()
                 .HasKey(x => x.AmenityId);

@@ -18,6 +18,7 @@ namespace CondoAmenitiesBooking.Domain.Entities
         public OwnerType OwnerType { get; set; } = OwnerType.Owner;
         public UserRole Role { get; set; } = UserRole.Resident;
         public bool IsActive { get; set; } = true;
+        public bool IsApproved { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public ICollection<AuditLog> AuditLogs { get; set; } = new List<AuditLog>();
