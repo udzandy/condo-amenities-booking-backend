@@ -96,6 +96,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                 .ThenInclude(x => x.Policy)
                 .Include(x => x.Unit)
                 .Include(x => x.Slot)
+                .Include(x => x.User)
                 .OrderByDescending(x => x.BookingDate)
                 .ToListAsync();
 
@@ -123,6 +124,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                 return new BookingDto
                 {
                     BookingId = x.BookingId,
+                    UserName = x.User.FirstName + " " + x.User.LastName,
                     AmenityName = x.Amenity.Name,
                     UnitName = x.Unit.UnitName,
                     BookingDate = x.BookingDate.ToString("yyyy-MM-dd"),
