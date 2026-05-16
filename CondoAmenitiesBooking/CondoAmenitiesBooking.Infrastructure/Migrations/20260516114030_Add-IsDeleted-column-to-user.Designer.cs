@@ -4,6 +4,7 @@ using CondoAmenitiesBooking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CondoAmenitiesBooking.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260516114030_Add-IsDeleted-column-to-user")]
+    partial class AddIsDeletedcolumntouser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,7 +56,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
 
                     b.HasKey("AmenityId");
 
-                    b.ToTable("Amenities", (string)null);
+                    b.ToTable("Amenities");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.AmenityPolicy", b =>
@@ -85,7 +87,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
                     b.HasIndex("AmenityId")
                         .IsUnique();
 
-                    b.ToTable("AmenityPolicies", (string)null);
+                    b.ToTable("AmenityPolicies");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.AmenityTimeSlot", b =>
@@ -112,7 +114,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
 
                     b.HasIndex("UnitId");
 
-                    b.ToTable("AmenityTimeSlots", (string)null);
+                    b.ToTable("AmenityTimeSlots");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.AmenityUnit", b =>
@@ -137,7 +139,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
 
                     b.HasIndex("AmenityId");
 
-                    b.ToTable("AmenityUnits", (string)null);
+                    b.ToTable("AmenityUnits");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.AuditLog", b =>
@@ -170,7 +172,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AuditLogs", (string)null);
+                    b.ToTable("AuditLogs");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.Booking", b =>
@@ -225,7 +227,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
                     b.HasIndex("BookingDate", "UnitId", "SlotId")
                         .IsUnique();
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.Payment", b =>
@@ -265,7 +267,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
 
                     b.HasIndex("BookingId");
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.User", b =>
@@ -332,7 +334,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Migrations
 
                     b.HasKey("UserId");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("CondoAmenitiesBooking.Domain.Entities.AmenityPolicy", b =>

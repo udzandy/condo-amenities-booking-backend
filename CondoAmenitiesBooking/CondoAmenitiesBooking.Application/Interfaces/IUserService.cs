@@ -9,7 +9,9 @@ namespace CondoAmenitiesBooking.Application.Interfaces
         Task<(string?, string?)> Login(LoginDto dto);
         Task<List<UserDto>> GetAllActiveUsers();
         Task<bool> DeleteUser(string userId);
+        Task<bool> RejectUser(string userId);
+        Task<bool> ApprovedUser(string userId);
         Task<User?> GetById(string userId);
-        Task<User?> ValidateUser(LoginDto dto);
+        Task<(User?, string?)> ValidateUser(LoginDto dto);
     }
 }

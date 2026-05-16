@@ -17,7 +17,8 @@ namespace CondoAmenitiesBooking.Domain.Entities
         public string PostalCode { get; set; } = default!;
         public OwnerType OwnerType { get; set; } = OwnerType.Owner;
         public UserRole Role { get; set; } = UserRole.Resident;
-        public bool IsActive { get; set; } = true;
+        public bool IsActive { get; set; } = false;
+        public bool IsDeleted { get; set; } = false;
         public bool IsApproved { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();

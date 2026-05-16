@@ -86,7 +86,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
         public async Task<List<UserDto>> GetAllActiveUsers()
         {
             return await _context.Users
-                .Where(x => x.IsActive)
+                .Where(x => !x.IsDeleted)
                 .Select(u => new UserDto
                 {
                     UserId = u.UserId,
@@ -107,7 +107,34 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
             if (user == null) return false;
 
-            user.IsActive = false; // soft delete
+            user.IsActive = false;
+            user.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> RejectUser(string userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            if (user == null) return false;
+
+            user.IsActive = false;
+            user.IsApproved = false;
+            user.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> ApprovedUser(string userId)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);
+            if (user == null) return false;
+
+            user.IsActive = true;
+            user.IsApproved = true;
+            user.IsDeleted = false;
             await _context.SaveChangesAsync();
 
             return true;
@@ -115,22 +142,28 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
         public async Task<User?> GetById(string userId)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserId == userId && !u.IsDeleted);
         }
 
-        public async Task<User?> ValidateUser(LoginDto dto)
+        public async Task<(User?, string?)> ValidateUser(LoginDto dto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Email == dto.Email && !x.IsDeleted);
 
             if (user == null)
-                return null;
+                return (null, "User Information not found");
+
+            if (!user.IsApproved) 
+                return (null, "Management not approved your registration request.");
+
+            if (!user.IsActive)
+                return (null, "You are inactive");
 
             var isValid = PasswordHelper.VerifyPassword(user.PasswordHash, dto.Password);
 
             if (!isValid)
-                return null;
+                return (null,"Password not valid");
 
-            return user;
+            return (user, null);
         }
     }
 }

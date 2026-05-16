@@ -33,24 +33,24 @@ namespace CondoAmenitiesBooking.Api.Controllers
             //if (user == null)
             //    return Unauthorized();
 
-            if (user == null)
+            if (user.Item1 == null)
             {
                 return Unauthorized(new
                 {
-                    message = "Invalid email or password"
+                    message = user.Item2
                 });
             }
 
-            var token = _jwtService.GenerateToken(user.UserId, user.Role.ToString());
+            var token = _jwtService.GenerateToken(user.Item1.UserId, user.Item1.Role.ToString());
 
             //return Ok(new { token });
 
             return Ok(new
             {
                 token,
-                userId = user.UserId,
-                name = $"{user.FirstName} {user.LastName}",
-                role = user.Role.ToString()
+                userId = user.Item1.UserId,
+                name = $"{user.Item1.FirstName} {user.Item1.LastName}",
+                role = user.Item1.Role.ToString()
             });
         }
 
@@ -79,15 +79,49 @@ namespace CondoAmenitiesBooking.Api.Controllers
             return Ok(users);
         }
 
-        [HttpDelete("deleteUser/{id}")]
-        public async Task<IActionResult> Delete(string userId)
+        [HttpDelete("deleteUser/{userId}")]
+        public async Task<IActionResult> DeleteUser(string userId)
         {
             var success = await _userService.DeleteUser(userId);
 
             if (!success)
                 return NotFound();
 
-            return Ok("User deactivated");
+            return Ok(new
+            {
+                success = true,
+                message = "User Deactivated"
+            });
+        }
+
+        [HttpDelete("rejectUser/{userId}")]
+        public async Task<IActionResult> RejectUser(string userId)
+        {
+            var success = await _userService.RejectUser(userId);
+
+            if (!success)
+                return NotFound();
+
+            return Ok(new
+            {
+                success = true,
+                message = "User Rejected"
+            });
+        }
+
+        [HttpPost("approveUser")]
+        public async Task<IActionResult> ApproveUser(string id)
+        {
+            var success = await _userService.ApprovedUser(id);
+
+            if (!success)
+                return NotFound();
+
+            return Ok(new
+            {
+                success = true,
+                message = "User Approved"
+            });
         }
     }
 }
