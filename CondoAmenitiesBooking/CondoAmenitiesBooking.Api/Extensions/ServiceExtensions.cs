@@ -14,11 +14,13 @@ namespace CondoAmenitiesBooking.Api.Extensions
             services.AddScoped<IUserService, UserRepository>();
             services.AddScoped<IBookingService, BookingRepository>();
             services.AddScoped<IAmenityService, AmenityRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWorkRepository>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAuditService, AuditService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IAdminDashboardService, AdminDashboardService>();
             services.AddScoped<IAmenityAdminService,AmenityAdminService>();
+            services.AddScoped<IPaymentService, PaymentService>();
             services.AddScoped<GetUserBookingsHandler>();
             services.AddScoped<CancelBookingHandler>();
             services.AddScoped<GetAmenitiesHandler>();

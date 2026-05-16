@@ -40,10 +40,17 @@ namespace CondoAmenitiesBooking.Api.Controllers
             });
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet("getUserBookings/{userId}")]
         public async Task<IActionResult> GetUserBookings(string userId)
         {
-            var result = await _getHandler.Handle(userId);
+            var result = await _getHandler.GetUserBookings(userId);
+            return Ok(result);
+        }
+
+        [HttpGet("getAllBookings")]
+        public async Task<IActionResult> GetAllBookings()
+        {
+            var result = await _getHandler.GetAllBookings();
             return Ok(result);
         }
 

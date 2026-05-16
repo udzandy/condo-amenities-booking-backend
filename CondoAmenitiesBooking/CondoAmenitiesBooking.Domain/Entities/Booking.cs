@@ -11,13 +11,10 @@ namespace CondoAmenitiesBooking.Domain.Entities
         public int UnitId { get; set; }
         public int SlotId { get; set; }
         public DateTime BookingDate { get; set; }
-        public BookingStatus Status { get; set; } = BookingStatus.Confirmed;
+        public BookingStatus BookingStatus { get; set; } = BookingStatus.Confirmed; //Pending, Confirmed, Cancelled
         public DateTime? UpdatedAt { get; set; }
-
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        // Concurrency (IMPORTANT for double booking prevention)
-        public byte[] RowVersion { get; set; } = default!;
-        // Navigation
+        public byte[] RowVersion { get; set; } = default!; // Concurrency (IMPORTANT for double booking prevention)
         public User User { get; set; } = default!;
         public Amenity Amenity { get; set; } = default!;
         public AmenityUnit Unit { get; set; } = default!;

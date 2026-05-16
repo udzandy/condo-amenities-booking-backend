@@ -42,7 +42,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Services
                 CancelledBookings =
                     await _context.Bookings
                         .CountAsync(x =>
-                            x.Status == BookingStatus.Cancelled)
+                            x.BookingStatus == BookingStatus.Cancelled)
             };
         }
 
@@ -87,7 +87,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Services
                             .ToString("hh:mm tt"),
 
                     Status =
-                        x.Status.ToString()
+                        x.BookingStatus.ToString()
                 })
                 .ToListAsync();
         }

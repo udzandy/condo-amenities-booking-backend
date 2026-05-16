@@ -90,8 +90,14 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                 .Select(u => new UserDto
                 {
                     UserId = u.UserId,
-                    Name = u.FirstName + " " + u.LastName,
-                    Email = u.Email
+                    FullName = u.FirstName + " " + u.LastName,
+                    Email = u.Email,
+                    Mobile = u.Mobile,
+                    Block = u.Block,
+                    Floor = u.Floor,
+                    Unit = u.Unit,
+                    IsActive = u.IsActive,
+                    IsApproved = u.IsApproved,
                 })
                 .ToListAsync();
         }

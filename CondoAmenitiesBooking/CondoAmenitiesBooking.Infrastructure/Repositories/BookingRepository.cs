@@ -30,7 +30,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                 b.UnitId == unitId &&
                 b.SlotId == slotId &&
                 b.BookingDate.Date == bookingDate.Date &&
-                b.Status == BookingStatus.Confirmed
+                b.BookingStatus == BookingStatus.Confirmed
             );
         }
 
@@ -43,28 +43,12 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
         public async Task<List<BookingDto>> GetUserBookings(string userId)
         {
-            //return await _context.Bookings
-            //    .Include(x => x.Amenity)
-            //    .Where(x => x.UserId == userId)
-            //    .OrderByDescending(b => b.CreatedAt)
-            //    .Select(x => new BookingDto
-            //    {
-            //        BookingId = x.BookingId,
-            //        AmenityName = x.Amenity.Name,
-            //        UnitName = x.Unit.UnitName,
-            //        BookingDate = x.BookingDate,
-            //        TimeSlot = $"{x.Slot.StartTime:hh:mm tt} - {x.Slot.EndTime:hh:mm tt}",
-            //        Status = x.Status.ToString()
-            //    })
-            //    .ToListAsync();
-
             var bookings = await _context.Bookings
                 .Include(x => x.Amenity)
-                    .ThenInclude(x => x.Policy)
+                .ThenInclude(x => x.Policy)
                 .Include(x => x.Unit)
                 .Include(x => x.Slot)
-                .Where(x =>
-                    x.UserId == userId)
+                .Where(x => x.UserId == userId)
                 .OrderByDescending(x => x.BookingDate)
                 .ToListAsync();
 
@@ -86,24 +70,65 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
 
                 // Final flag
                 var canCancel =
-                    x.Status != BookingStatus.Cancelled &&
+                    x.BookingStatus != BookingStatus.Cancelled &&
                     hoursLeft >= cancellationHours;
 
                 return new BookingDto
                 {
                     BookingId = x.BookingId,
-
                     AmenityName = x.Amenity.Name,
-
                     UnitName = x.Unit.UnitName,
-
-                    BookingDate = x.BookingDate,
-
+                    BookingDate = x.BookingDate.ToString("yyyy-MM-dd"),
                     TimeSlot = $"{DateTime.Today.Add(x.Slot.StartTime):hh:mm tt} - " +
                                $"{DateTime.Today.Add(x.Slot.EndTime):hh:mm tt}",
+                    Status = x.BookingStatus.ToString(),
+                    CanCancel = canCancel
+                };
+            }).ToList();
 
-                    Status = x.Status.ToString(),
+            return result;
+        }
 
+        public async Task<List<BookingDto>> GetAllBookings()
+        {
+            var bookings = await _context.Bookings
+                .Include(x => x.Amenity)
+                .ThenInclude(x => x.Policy)
+                .Include(x => x.Unit)
+                .Include(x => x.Slot)
+                .OrderByDescending(x => x.BookingDate)
+                .ToListAsync();
+
+            var result = bookings.Select(x =>
+            {
+                // Calculate booking start datetime
+                var bookingStart =
+                    x.BookingDate.Date +
+                    x.Slot.StartTime;
+
+                // Hours remaining
+                var hoursLeft =
+                    (bookingStart - DateTime.UtcNow)
+                    .TotalHours;
+
+                // Policy hours
+                var cancellationHours =
+                    x.Amenity.Policy.CancellationHours;
+
+                // Final flag
+                var canCancel =
+                    x.BookingStatus != BookingStatus.Cancelled &&
+                    hoursLeft >= cancellationHours;
+
+                return new BookingDto
+                {
+                    BookingId = x.BookingId,
+                    AmenityName = x.Amenity.Name,
+                    UnitName = x.Unit.UnitName,
+                    BookingDate = x.BookingDate.ToString("yyyy-MM-dd"),
+                    TimeSlot = $"{DateTime.Today.Add(x.Slot.StartTime):hh:mm tt} - " +
+                               $"{DateTime.Today.Add(x.Slot.EndTime):hh:mm tt}",
+                    Status = x.BookingStatus.ToString(),
                     CanCancel = canCancel
                 };
 
@@ -119,7 +144,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                                 .ThenInclude(x => x.Policy)
                                 .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.UserId == userId);
 
-            if (booking == null || booking.Status == BookingStatus.Cancelled)
+            if (booking == null || booking.BookingStatus == BookingStatus.Cancelled)
                 return (null, false);
 
             // GET POLICY HOURS
@@ -132,7 +157,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
             if (hoursLeft < cancellationHours)
                 return (null, false);
 
-            booking.Status = BookingStatus.Cancelled;
+            booking.BookingStatus = BookingStatus.Cancelled;
             booking.UpdatedAt = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();

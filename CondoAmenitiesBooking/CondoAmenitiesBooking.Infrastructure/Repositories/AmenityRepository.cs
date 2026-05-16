@@ -61,7 +61,7 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                 .Where(x =>
                     x.AmenityId == amenity!.AmenityId &&
                     x.BookingDate.Date == bookingDate.Date &&
-                    x.Status == BookingStatus.Confirmed)
+                    x.BookingStatus == BookingStatus.Confirmed)
                 .ToListAsync();
 
             // BUILD RESPONSE
