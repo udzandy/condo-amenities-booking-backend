@@ -102,6 +102,25 @@ namespace CondoAmenitiesBooking.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public async Task<RegisterUserDto?> GetUserById(string userId)
+        {
+            return await _context.Users
+                .Where(u => u.UserId == userId && !u.IsDeleted)
+                .Select(u => new RegisterUserDto
+                {
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    Mobile = u.Mobile,
+                    EstateName = u.Estate,
+                    Block = u.Block,
+                    Floor = u.Floor,
+                    UnitNumber = u.Unit,
+                    PostalCode = u.PostalCode,
+                    UserType = u.OwnerType
+                }).FirstOrDefaultAsync();
+        }
+
         public async Task<bool> DeleteUser(string userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.UserId == userId);

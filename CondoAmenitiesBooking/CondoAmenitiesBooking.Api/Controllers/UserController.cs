@@ -79,6 +79,13 @@ namespace CondoAmenitiesBooking.Api.Controllers
             return Ok(users);
         }
 
+        [HttpGet("getUserById/{userId}")]
+        public async Task<IActionResult> GetUserById(string userId)
+        {
+            var users = await _userService.GetUserById(userId);
+            return Ok(users);
+        }
+
         [HttpDelete("deleteUser/{userId}")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
